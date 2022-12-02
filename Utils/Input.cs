@@ -38,7 +38,7 @@ namespace Utils
 
 
             using var client = new HttpClient(new HttpClientHandler() { CookieContainer = cookieContainer });
-            return await client.GetByteArrayAsync($"{baseAdr}/2022/day/{day}");
+            return await client.GetByteArrayAsync($"{baseAdr}2022/day/{day}/input");
         }
     }
 }
