@@ -1,4 +1,4 @@
-﻿var reader = File.ReadLines("input.txt");
+﻿var reader = File.ReadLines(new Utils.Input("1", "").GetInputFilePath());
 
 
 List<int> caloriesPerElf = new ();
