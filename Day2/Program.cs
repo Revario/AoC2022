@@ -19,12 +19,12 @@ Play ConvertToPlay(string l, bool isPart2)
     };
 
     Hand me = l.Last() switch
-    {
-        'X' => Hand.Rock,
-        'Y' => Hand.Paper,
-        'Z' => Hand.Scissor,
-        _ => throw new ArgumentException()
-    };
+        {
+            'X' => Hand.Rock,
+            'Y' => Hand.Paper,
+            'Z' => Hand.Scissor,
+            _ => throw new ArgumentException()
+        };
 
     if(isPart2)
     {
@@ -59,6 +59,7 @@ Result CalcResult(Play h) => h switch
     _ => Result.Even
 };
 
+//Result CalcResultPart2(Play p) => CalcResultForHandPart2(p.me);
 Result CalcResultForHandPart2(Hand h) => h switch
 {
     Hand.Rock  => Result.Loss,
