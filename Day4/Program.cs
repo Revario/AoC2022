@@ -3,15 +3,17 @@
 
 
 
-var s = inputs.Select(i =>
+var intervals = inputs.Select(i =>
 {
-    var a = i.Split(',').SelectMany(ss => ss.Split('-')).ToArray();
+    var intervalParts = i.Split(',')
+            .SelectMany(ss => ss.Split('-').Select(n => int.Parse(n)))
+            .ToArray();
     return new
     {
-        firstStart = int.Parse(a[0]),
-        firstEnd = int.Parse(a[1]),
-        secondStart = int.Parse(a[2]),
-        secondEnd = int.Parse(a[3])
+        firstStart = intervalParts[0],
+        firstEnd = intervalParts[1],
+        secondStart = intervalParts[2],
+        secondEnd = intervalParts[3]
     };
 }).ToArray();
 
@@ -20,7 +22,7 @@ var s = inputs.Select(i =>
 
 
 
-Console.WriteLine(s.Count(a =>
+Console.WriteLine(intervals.Count(a =>
     (a.firstStart <= a.secondStart
     && a.firstEnd >= a.secondEnd)
     ||
@@ -30,7 +32,7 @@ Console.WriteLine(s.Count(a =>
 
 
 
-Console.WriteLine(s.Count(a =>
+Console.WriteLine(intervals.Count(a =>
     (a.firstStart <= a.secondStart
     && a.firstEnd >= a.secondStart)
     ||
