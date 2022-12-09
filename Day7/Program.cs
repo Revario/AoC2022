@@ -1,6 +1,4 @@
 ﻿
-using System.Reflection.Metadata.Ecma335;
-
 var instructions = File.ReadAllLines(new Utils.Input("7").GetInputFilePath());
 
 
