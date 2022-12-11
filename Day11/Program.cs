@@ -26,4 +26,19 @@ class Monkey
         Action = action;
     }
 
+    public static Monkey Parse(string input)
+    {
+
+        var lines = input.Split("\n");
+
+        var items = lines[1].Split(":")[1].Trim().Split(",").Select(s => int.Parse(s)).ToList();
+
+        var opLine = lines[2].Split("=")[1].Trim().Split(" ") switch
+        {
+            ["old", "*", "old"] => (int old) => old * old,
+            ["old", "*", var numS] when int.TryParse(numS, out var num) => (Func<int,int>)((int old) => old * num),
+            ["old", "+", var numS] when int.TryParse(numS, out var num) => (Func<int, int>)((int old) => old + num)
+
+        };
+    }
 }
