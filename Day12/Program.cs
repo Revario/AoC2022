@@ -34,8 +34,6 @@ for (int y = 0; y < input.Length; y++)
 	}
 }
 
-int steps = 0;
-
 knownPositions.Add(current);
 toExplore.Enqueue(current);
 
@@ -44,7 +42,7 @@ while (!Explore())
 	current = toExplore.Dequeue();
 }
 
-Console.WriteLine(knownPositions.First(p => p == goal));
+Console.WriteLine(knownPositions.First(p => p.Equals(goal)).steps);
 
 
 bool Explore()
@@ -62,7 +60,7 @@ bool Explore()
 		{
 			p.steps = current.steps + 1;
 			knownPositions.Add(p);
-			if (p == goal) return true;
+			if (p.Equals(goal)) return true;
 			toExplore.Enqueue(p);
 		}
 	}
