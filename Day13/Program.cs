@@ -4,7 +4,12 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        var input = File.ReadAllText(Utils.Input.GetInputFilePath(13)).Split("\n\n").Select(s => s.Split("\n")).Select(i => (i[0], i[1])).ToList();
+        var input = File.ReadAllText(Utils.Input.GetInputFilePath(13))
+            .Split("\n\n")
+            .Select(s => s.Split("\n"))
+            .Select(i => (i[0], i[1]))
+            //.Take(15)
+            .ToList();
 
         //input = "[1,1,3,1,1]\n[1,1,5,1,1]\n\n[[1],[2,3,4]]\n[[1],4]\n\n[9]\n[[8,7,6]]\n\n[[4,4],4,4]\n[[4,4],4,4,4]\n\n[7,7,7,7]\n[7,7,7]\n\n[]\n[3]\n\n[[[]]]\n[[]]\n\n[1,[2,[3,[4,[5,6,7]]]],8,9]\n[1,[2,[3,[4,[5,6,0]]]],8,9]".Split("\n\n").Select(s => s.Split("\n")).Select(i => (i[0], i[1])).ToList();
 
@@ -15,7 +20,7 @@ public class Program
             var curInp = input[i];
 
             var res = CompareLists(curInp.Item1, curInp.Item2);
-            if (res == 1)
+            if (res == -1)
             {
                 correctPairs.Add(i + 1);
             }
@@ -57,18 +62,14 @@ public class Program
 
             var comp = Compare(left, right);
 
-            if (comp < 0)
+            if (comp != 0)
             {
-                return 1;
-            }
-            if (comp > 0)
-            {
-                return -1;
+                return comp;
             }
         }
         if (curL.Length != curR.Length)
         {
-            return curR.Length.CompareTo(curL.Length);
+            return curL.Length.CompareTo(curR.Length);
         }
         return 0;
     }
@@ -92,7 +93,7 @@ public class Program
         if (!inp.StartsWith('['))
         {
             var comma = inp.IndexOf(',');
-            inp = inp.Insert(comma > 0 ? comma : inp.Length - 1, "]");
+            inp = inp.Insert(comma > 0 ? comma : inp.Length, "]");
             inp = inp.Insert(0, "[");
         }
 
