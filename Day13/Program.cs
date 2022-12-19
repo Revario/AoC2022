@@ -14,9 +14,15 @@ public class Program
         {
             var curInp = input[i];
 
-            if (CompareLists(curInp.Item1, curInp.Item2) == 1)
+            var res = CompareLists(curInp.Item1, curInp.Item2);
+            if (res == 1)
             {
                 correctPairs.Add(i + 1);
+            }
+
+            if(res == 0)
+            {
+                throw new Exception("Could not make descision");
             }
 
         }
