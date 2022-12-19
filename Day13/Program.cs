@@ -8,107 +8,150 @@ input = "[1,1,3,1,1]\n[1,1,5,1,1]\n\n[[1],[2,3,4]]\n[[1],4]\n\n[9]\n[[8,7,6]]\n\
 
 
 int correct = 0;
-foreach(var p in input)
+
+for (int s = 0; s < input.Count; s++)
 {
-    if(UnpackAndCompare(p.Item1, p.Item2)) correct++;
-}
+	var l = input[s].Item1;
+	var r = input[s].Item2;
 
-bool UnpackAndCompare(string left, string right)
-{
-    if(string.IsNullOrEmpty(left) && !string.IsNullOrEmpty(right))
-    {
-        return false;
+	while (true) {
+		if (string.IsNullOrEmpty(l))
+		{
+			correct += s + 1;
+			break;
+		} else if (string.IsNullOrEmpty(r))
+		{
+			break;
+		}
+
+
+
+		//if (l[li] == '[')
+		//{
+		//	if (r[ri] == '[')
+		//	{
+		//		continue;
+		//	} else
+		//	{
+		//		r = r.Insert(ri + 1, "]");
+		//              li++;
+		//	}
+		//} else if (r[ri] == '[')
+		//{
+		//	l = l.Insert(li + 1, "]");
+		//	ri++;
+		//}
+
+		//if (l[li] == ']') 
+		//{
+		//	if (r[ri] == ']')
+		//	{
+		//		continue;
+		//	} else
+		//	{
+		//              correct += s + 1;
+		//		break;
+		//	}
+		//} else if (r[ri] == ']')
+		//{
+		//	break;
+		//}
+
+
+
+		//TODO hantera slutbracket när enskild siffra wrappas
+
+		(l, r) = Unpack(l, r);
+
+		if (l[0] != ']' && r[0] == ']')
+		{
+			break;
+		}
+
+		if (l[0] < r[0] || l[0] == ']')
+		{
+			correct += s + 1;
+			break;
+		}
+		
+		if (l[0] > r[0])
+		{
+			break;
+		}
+
+        l = l[1..];
+        r = r[1..];
+
     }
-    else if (string.IsNullOrEmpty(right))
-    {
-        return true;
-    }
-
-    (left, right) = Unpack(left, right);
 
 
-    var l = left.Split(",");
-    var r = right.Split(",");
-
-
-    for (int i = 0; i < l.Length; i++)
-    {
-        if (l[i].StartsWith('[') && r[i].StartsWith('['))
-        {
-            return UnpackAndCompare(l[i], r[i]);
-        }
     
-        if (l[i].StartsWith('['))
-        {
-            return UnpackAndCompare(l[i], $"[{r[i]}]");
-        } else if (r[i].StartsWith('['))
-        {
-            return UnpackAndCompare($"[{l[i]}]", r[i]);
-        }
-
-        int lV = ConvertToInt(l[i]);
-        int rV = ConvertToInt(r[i]);
-
-        if (lV < rV)
-        {
-            return true;
-        } else if (lV > rV)
-        {
-            return false;
-        }
-    }
-    //Compare(left, right);
-
-    throw new ArgumentException();
 }
 
+Console.WriteLine(correct);
 
-int ConvertToInt(string inp)
+
+//bool Unpack(string l, string r, out string left, out string right)
+//{
+//    if (l[0] == '[')
+//    {
+//        if (r[0] == '[')
+//        {
+//			left = l[1..];
+//			right = r[1..];
+
+//            return false;
+//        }
+//        else
+//        {
+//			left = l[1..];
+//			right = r.Insert(1, "]");
+//            return false;
+//        }
+//    }
+//    else if (r[0] == '[')
+//    {
+//        left = l.Insert(1, "]");
+//		right = r[1..];
+//		return false;
+//    }
+
+//    if (l[0] == ']' && r[0] == ']')
+//    {
+//		left = l[1..];
+//		right = r[1..];
+//		return false;
+//    }
+//	left = l;
+//	right = r;
+//	return true;
+//}
+
+(string left, string right) Unpack(string l, string r)
 {
-    if(inp.Length != 1)
+	if (l.Length > 2 && l[..2] == "[]")
+	{
+		return (l[1..], r[1..]);
+	}
+    if (l[0] == '[')
     {
-        throw new ArgumentException();
+        if (r[0] == '[')
+        {
+            return Unpack(l[1..], r[1..]);
+        }
+        else
+        {
+            return Unpack(l[1..], r.Insert(1, "]"));
+        }
+    }
+    else if (r[0] == '[')
+    {
+        return Unpack(l.Insert(1, "]"), r[1..]);
     }
 
-    return (int)inp[0];
+    if (l[0] == ']' && r[0] == ']')
+    {
+        return Unpack(l[1..], r[1..]);
+    }
+    return (l, r);
 }
-
-
-//var (left, right) = input.First();
-
-
-//for (int i = 0; i < left.Length; i++)
-//{
-
-//}
-
-
-//if(Unpack(left, out var unp))
-//{
-//    Console.WriteLine(unp);
-//}
-(string, string) Unpack(string left, string right)
-{
-    //output = input;
-
-    //if (string.IsNullOrEmpty(input))
-    //{
-    //    return false;
-    //}
-
-    //if (input.StartsWith('['))
-    //{
-
-    return (left[1..^1], right[1..^1]);
-
-    //    return true;    
-    //}
-
-    //if(int.TryParse(input[0].ToString(), out var _))
-    //{
-    //    return true;
-    //}
-
-    //throw new ArgumentException("Could not unpack, unexpected input");
-}
-
