@@ -4,10 +4,10 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        var input = File.ReadAllText(Utils.Input.GetInputFilePath(13))
+        var inputPart1 = File.ReadAllText(Utils.Input.GetInputFilePath(13))
             .Split("\n\n")
             .Select(s => s.Split("\n"))
-            .Select(i => (i[0], i[1]))
+            .Select(i => (new Signal(i[0]), new Signal(i[1])))
             //.Take(15)
             .ToList();
 
@@ -15,11 +15,11 @@ public class Program
 
 
         List<int> correctPairs = new();
-        for (int i = 0; i < input.Count; i++)
+        for (int i = 0; i < inputPart1.Count; i++)
         {
-            var curInp = input[i];
+            var curInp = inputPart1[i];
 
-            var res = CompareLists(curInp.Item1, curInp.Item2);
+            var res = CompareLists(curInp.Item1.S, curInp.Item2.S);
             if (res == -1)
             {
                 correctPairs.Add(i + 1);
@@ -34,6 +34,32 @@ public class Program
 
         Console.WriteLine(correctPairs.Sum());
 
+        var inputPart2 = File.ReadAllLines(Utils.Input.GetInputFilePath(13))
+           .Where(l => !string.IsNullOrWhiteSpace(l))
+           .Select(s => new Signal(s))
+           //.Take(15)
+           .ToList();
+
+        Signal divider2 = new("[[2]]");
+        Signal divider6 = new("[[6]]");
+
+        inputPart2.AddRange(new Signal[]{ divider2, divider6 });
+
+        inputPart2.Sort();
+
+        var divider2Index = inputPart2.FindIndex(s => s == divider2) + 1;
+        var divider6Index = inputPart2.FindIndex(s => s == divider6) + 1;
+
+
+        Console.WriteLine(divider2Index * divider6Index);
+    }
+
+    public record Signal(string S) : IComparable<Signal>
+    {
+        public int CompareTo(Signal? other)
+        {
+            return CompareLists(this.S, other.S);
+        }
     }
     public static int CompareLists(string lInp, string rInp)
     {
