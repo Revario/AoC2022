@@ -1,9 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Runtime.CompilerServices;
+﻿
 using System.Text;
-using System.Xml.Serialization;
 
 var input = File.ReadLines(Utils.Input.GetInputFilePath(9));
 
