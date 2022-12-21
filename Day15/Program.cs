@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Numerics;
+using System.Text.RegularExpressions;
 
 var input = File.ReadLines(Utils.Input.GetInputFilePath(15));
 
@@ -21,6 +22,8 @@ var input = File.ReadLines(Utils.Input.GetInputFilePath(15));
 //,"Sensor at x=20, y=1: closest beacon is at x=15, y=3"};
 
 
+const int rowToLookAt = 2000000;
+//const int rowToLookAt = 10;
 
 
 var reg = new Regex(@"x=(-?\d+).+y=(-?\d+):.+x=(-?\d+).+y=(-?\d+)");
@@ -49,7 +52,6 @@ var min = FindMinimumXForY();
 var max = FindMaximumXForY();
 
 var sensors = positions.Where(pos => pos is Sensor).Cast<Sensor>().ToList();
-const int rowToLookAt = 2000000;
 var n = 0;
 foreach (var p in Enumerable.Range(min, max - min))
 {
@@ -64,7 +66,7 @@ foreach (var p in Enumerable.Range(min, max - min))
 Console.WriteLine(n);
 
 var pos = FindPosition();
-Console.WriteLine(pos.X * 4_000_000 + pos.Y);
+Console.WriteLine((BigInteger)pos.X * 4_000_000 + pos.Y);
 
 Point FindPosition()
 {
@@ -73,11 +75,14 @@ Point FindPosition()
         for (int xPos = 0; xPos < 4_000_000; xPos++)
         {
             var inReach = sensors
-            .Any(s => s.CalculateDistanceToPosition(new Point(xPos, yPos)) <= s.DistanceToClosestBeacon);
+            .FirstOrDefault(s => s.CalculateDistanceToPosition(new Point(xPos, yPos)) <= s.DistanceToClosestBeacon);
 
-            if (!inReach)
+            if (inReach is null)
             {
                 return new Point(xPos, yPos);
+            } else
+            {
+                xPos = inReach.DistanceToClosestBeacon - Math.Abs(inReach.Y - yPos) + inReach.X;
             }
         }
     }
