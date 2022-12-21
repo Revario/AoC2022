@@ -48,11 +48,12 @@ foreach(var l in input)
 var min = FindMinimumXForY();
 var max = FindMaximumXForY();
 
+var sensors = positions.Where(pos => pos is Sensor).Cast<Sensor>().ToList();
 const int rowToLookAt = 2000000;
 var n = 0;
-foreach(var p in Enumerable.Range(min, max - min))
+foreach (var p in Enumerable.Range(min, max - min))
 {
-    var inReach =positions.Where(pos => pos is Sensor).Cast<Sensor>()
+    var inReach = sensors
         .FirstOrDefault(s => s.CalculateDistanceToPosition(new Point(p, rowToLookAt)) <= s.DistanceToClosestBeacon);
 
     if (inReach is not null && !positions.Any(pos => pos.X == p && pos.Y == rowToLookAt))
@@ -62,6 +63,27 @@ foreach(var p in Enumerable.Range(min, max - min))
 }
 Console.WriteLine(n);
 
+var pos = FindPosition();
+Console.WriteLine(pos.X * 4_000_000 + pos.Y);
+
+Point FindPosition()
+{
+    for (int yPos = 0; yPos < 4_000_000; yPos++)
+    {
+        for (int xPos = 0; xPos < 4_000_000; xPos++)
+        {
+            var inReach = sensors
+            .Any(s => s.CalculateDistanceToPosition(new Point(xPos, yPos)) <= s.DistanceToClosestBeacon);
+
+            if (!inReach)
+            {
+                return new Point(xPos, yPos);
+            }
+        }
+    }
+
+    throw new Exception();
+}
 
 int FindMinimumXForY()
 {
